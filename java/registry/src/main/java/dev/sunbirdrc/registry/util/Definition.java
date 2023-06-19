@@ -24,6 +24,8 @@ public class Definition {
     private final static String TYPE = "type";
     private final static String OBJECT = "object";
 
+   private final static String uniqueIndexFields = null;
+
     private String content;
     private String title;
 
@@ -126,5 +128,10 @@ public class Definition {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode schemaJsonNode = objectMapper.readTree(jsonNode.asText());
         return new Definition(schemaJsonNode);
+    }
+
+
+   public String getUniqueIndexFields(String schemaName) {
+        return uniqueIndexFields;
     }
 }

@@ -10,6 +10,8 @@ public class ShardParentInfo {
     private String uuid;
     private Vertex vertex;
 
+    String schemaName;
+
     public ShardParentInfo(String name, Vertex vertex) {
         this.name = name;
         this.vertex = vertex;
@@ -37,5 +39,16 @@ public class ShardParentInfo {
 
     public void setVertex(Vertex vertex) {
         this.vertex = vertex;
+    }
+
+
+
+   public  void setSchemaName(String schemaName){
+        this.schemaName=schemaName;
+    }
+
+
+    public String getSchemaName() {
+        return schemaName;
     }
 }
