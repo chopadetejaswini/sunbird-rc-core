@@ -343,4 +343,7 @@ Feature: Registry api tests
     When method get
     Then status 200
     And assert response[0].address[0].phoneNo.length == 1
+<<<<<<< Updated upstream
+    And assert response[0].address[0].phoneNo[0] == "444"
+=======
     And assert response[0].address[0].phoneNo[0] == "444"

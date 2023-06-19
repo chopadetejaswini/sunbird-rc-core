@@ -114,6 +114,10 @@ public class RegistryServiceImpl implements RegistryService {
     @Autowired
     private List<HealthIndicator> healthIndicators;
 
+    public static final String SHARD_ID = "shardId";
+    private Graph graph;
+
+
     public HealthCheckResponse health(Shard shard) throws Exception {
         HealthCheckResponse healthCheck;
         AtomicBoolean overallHealthStatus = new AtomicBoolean(true);
@@ -213,13 +217,26 @@ public class RegistryServiceImpl implements RegistryService {
                 }
             }
             // Add indices: executes only once.
+           /* if (perRequestIndexCreation) {
+                String shardId = shard.getShardId();
+                Vertex parentVertex = entityParenter.getKnownParentVertex(vertexLabel, shardId);
+               // entityParenter.setParentVertex( vertexLabel, parentVertex, shardId);
+                Definition definition = definitionsManager.getDefinition(vertexLabel);
+                entityParenter.ensureIndexExists(dbProvider, parentVertex,definition, shardId);
+            }*/
             if (perRequestIndexCreation) {
                 String shardId = shard.getShardId();
                 Vertex parentVertex = entityParenter.getKnownParentVertex(vertexLabel, shardId);
                 Definition definition = definitionsManager.getDefinition(vertexLabel);
+                // If parentVertex is null, create a default parent vertex
+                if (parentVertex == null) {
+                    String defaultParentVertexLabel = definition + "_GROUP";
+                    parentVertex = graph.addVertex(defaultParentVertexLabel);
+                    // final String SHARD_ID = "shardId";
+                     //parentVertex = graph.addVertex(T.label, defaultParentVertexLabel, SHARD_ID, shardId);
+                }
                 entityParenter.ensureIndexExists(dbProvider, parentVertex, definition, shardId);
             }
-
             if (isElasticSearchEnabled()) {
                 if (addShardPrefixForESRecord && !shard.getShardLabel().isEmpty()) {
                     // Replace osid with shard details

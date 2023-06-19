@@ -13,4 +13,9 @@ public class ShardParentInfoList {
     public void setParentInfos(List<ShardParentInfo> parentInfos) {
         this.parentInfos = parentInfos;
     }
+
+    public void addParentInfo(ShardParentInfo shardParentInfo) {
+        parentInfos.add(shardParentInfo);
+    }
+
 }

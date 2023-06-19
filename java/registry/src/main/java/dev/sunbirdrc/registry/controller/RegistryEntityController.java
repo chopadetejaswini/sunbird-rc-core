@@ -24,6 +24,7 @@ import dev.sunbirdrc.registry.service.ICertificateService;
 import dev.sunbirdrc.registry.transform.Configuration;
 import dev.sunbirdrc.registry.transform.Data;
 import dev.sunbirdrc.registry.transform.ITransformer;
+import dev.sunbirdrc.registry.util.EntityParenter;
 import dev.sunbirdrc.validators.ValidationException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
@@ -61,6 +62,9 @@ public class RegistryEntityController extends AbstractController {
 
     @Autowired
     private AsyncRequest asyncRequest;
+
+    @Autowired
+    EntityParenter entityParenter;
 
 
 
@@ -226,7 +230,7 @@ public class RegistryEntityController extends AbstractController {
     }
 
 
-    @RequestMapping(value = "/api/v1/{entityName}", method = RequestMethod.POST)
+   @RequestMapping(value = "/api/v1/{entityName}", method = RequestMethod.POST)
     public ResponseEntity<Object> postEntity(
             @PathVariable String entityName,
             @RequestHeader HttpHeaders header,
@@ -245,6 +249,11 @@ public class RegistryEntityController extends AbstractController {
         newRootNode.set(entityName, rootNode);
 
         try {
+            if(!entityName.equals("Schema")) {
+               entityParenter.ensureKnownParenters();
+               entityParenter.loadDefinitionIndex();
+                entityParenter.ensureIndexExists();
+            }
             String userId = registryHelper.authorizeManageEntity(request, entityName);
             String label = registryHelper.addEntity(newRootNode, userId);
             String emailId = registryHelper.fetchEmailIdFromToken(request, entityName);
@@ -272,8 +281,6 @@ public class RegistryEntityController extends AbstractController {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-
 
     @RequestMapping(value = "/api/v1/{entityName}/{entityId}/**", method = RequestMethod.PUT)
     public ResponseEntity<Object> updatePropertyOfTheEntity(
