@@ -1,5 +1,4 @@
 package dev.sunbirdrc.registry.controller;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -44,7 +43,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-
 import static dev.sunbirdrc.registry.Constants.*;
 import static dev.sunbirdrc.registry.middleware.util.Constants.ENTITY_TYPE;
 
@@ -247,7 +245,6 @@ public class RegistryEntityController extends AbstractController {
         Map<String, Object> result = new HashMap<>();
         ObjectNode newRootNode = objectMapper.createObjectNode();
         newRootNode.set(entityName, rootNode);
-
         try {
             if(!entityName.equals("Schema")) {
                entityParenter.ensureKnownParenters();
@@ -598,8 +595,6 @@ public class RegistryEntityController extends AbstractController {
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
     }
-
-    //TODO: check the usage and deprecate the api if not used
     @GetMapping(value = "/api/v1/{entity}/{entityId}/attestationProperties")
     public ResponseEntity<Object> getEntityForAttestation(
             @PathVariable String entity,
